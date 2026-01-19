@@ -48,6 +48,14 @@ export const apiAdmin = {
     createProduct: (data) => api.post('/admin/products', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
     updateProduct: (id, data) => api.post(`/admin/products/${id}?_method=PUT`, data, { headers: { 'Content-Type': 'multipart/form-data' } }), // Laravel method spoofing for FormData
     deleteProduct: (id) => api.delete(`/admin/products/${id}`),
+
+    // Attendance
+    getAttendance: () => api.get('/admin/attendance'),
+
+    // Invitations (Tokens)
+    getInvitations: () => api.get('/admin/invitations'),
+    createInvitation: (data) => api.post('/admin/invitations', data),
+    deleteInvitation: (id) => api.delete(`/admin/invitations/${id}`),
 };
 
 // --- CLIENT API ---
@@ -62,6 +70,10 @@ export const apiClient = {
         headers: { 'Content-Type': 'multipart/form-data' }
     }),
     getPublicProducts: () => api.get('/products'),
+
+    // RSVP
+    submitRsvp: (data) => api.post('/rsvp', data),
+    getAttendanceBySlug: (slug) => api.get(`/attendance/${slug}`),
 };
 
 export default api;

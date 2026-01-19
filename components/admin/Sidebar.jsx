@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { LayoutGrid, ClipboardList, LogOut, Package } from 'lucide-react';
+import { LayoutGrid, ClipboardList, LogOut, Package, UserCheck, Key } from 'lucide-react';
 import { apiAuth } from '../../utils/api';
 
 export default function Sidebar() {
@@ -25,23 +25,43 @@ export default function Sidebar() {
                 <span className="text-xl font-bold text-indigo-600 tracking-wide">Sinvitation</span>
             </div>
 
-            <nav className="flex-1 px-4 py-6 space-y-2">
+            <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <Link href="/admin/dashboard" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <LayoutGrid className="w-5 h-5 mr-3" />
                     Beranda
                 </Link>
+
+                <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Pesanan
+                </div>
                 <Link href="/admin/wedding" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/wedding') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <ClipboardList className="w-5 h-5 mr-3" />
-                    Data Pernikahan
+                    Pernikahan
                 </Link>
                 <Link href="/admin/birthday" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/birthday') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <ClipboardList className="w-5 h-5 mr-3" />
-                    Data Birthday
+                    Birthday
                 </Link>
                 <Link href="/admin/metatah" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/metatah') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <ClipboardList className="w-5 h-5 mr-3" />
-                    Data Metatah
+                    Metatah
                 </Link>
+
+                <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    RSVP & Keamanan
+                </div>
+                <Link href="/admin/attendance" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/attendance') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                    <UserCheck className="w-5 h-5 mr-3" />
+                    Daftar RSVP
+                </Link>
+                <Link href="/admin/invitations" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/invitations') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                    <Key className="w-5 h-5 mr-3" />
+                    Tokens Undangan
+                </Link>
+
+                <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Katalog
+                </div>
                 <Link href="/admin/products" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/products') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <Package className="w-5 h-5 mr-3" />
                     Data Produk
