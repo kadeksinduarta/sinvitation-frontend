@@ -6,13 +6,16 @@ import toast from 'react-hot-toast';
 
 export default function AdminAttendance() {
     const [attendances, setAttendances] = useState([]);
+    const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
 
     const fetchAttendances = async () => {
         try {
             const response = await apiAdmin.getAttendance();
-            setAttendances(response.data);
+            // response.data contains { data: [...rsvps], stats: { ... } }
+            setAttendances(response.data.data);
+            setStats(response.data.stats);
         } catch (error) {
             console.error('Failed to fetch attendance:', error);
             toast.error('Gagal memuat data kehadiran');
@@ -26,8 +29,8 @@ export default function AdminAttendance() {
     }, []);
 
     const filteredAttendances = attendances.filter(item =>
-        item.guest_name.toLowerCase().includes(search.toLowerCase()) ||
-        item.invitation_slug.toLowerCase().includes(search.toLowerCase())
+        item.nama_tamu?.toLowerCase().includes(search.toLowerCase()) ||
+        item.invitation?.slug?.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
@@ -48,6 +51,28 @@ export default function AdminAttendance() {
                     <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
                 </div>
             </div>
+
+            {stats && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col">
+                        <span className="text-gray-500 text-sm">Total RSVP</span>
+                        <span className="text-2xl font-bold text-gray-800">{stats.total}</span>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-xl shadow-sm border border-green-100 flex flex-col">
+                        <span className="text-green-600 text-sm">Hadir (Jumlah Orang)</span>
+                        <span className="text-2xl font-bold text-green-700">{stats.hadir}</span>
+                    </div>
+                    <div className="bg-red-50 p-4 rounded-xl shadow-sm border border-red-100 flex flex-col">
+                        <span className="text-red-600 text-sm">Tidak Hadir</span>
+                        <span className="text-2xl font-bold text-red-700">{stats.tidak_hadir}</span>
+                    </div>
+                    <div className="bg-yellow-50 p-4 rounded-xl shadow-sm border border-yellow-100 flex flex-col">
+                        <span className="text-yellow-600 text-sm">Ragu</span>
+                        <span className="text-2xl font-bold text-yellow-700">{stats.ragu}</span>
+                    </div>
+                </div>
+            )}
+
 
             {loading ? (
                 <div className="text-center py-12 text-gray-500 italic">Memuat data...</div>
@@ -72,29 +97,32 @@ export default function AdminAttendance() {
                                 {filteredAttendances.map((item) => (
                                     <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2">
-                                                <UserCheck className="w-4 h-4 text-blue-500" />
-                                                <span className="font-semibold text-gray-900">{item.guest_name}</span>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <UserCheck className="w-4 h-4 text-blue-500" />
+                                                    <span className="font-semibold text-gray-900">{item.nama_tamu}</span>
+                                                </div>
+                                                <span className="text-xs text-gray-500 ml-6">({item.jumlah_kehadiran} orang)</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs font-mono lowercase">
-                                                {item.invitation_slug}
+                                                {item.invitation?.slug}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.attendance === 'Hadir'
+                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.status_kehadiran === 'hadir'
                                                     ? 'bg-green-100 text-green-700'
-                                                    : 'bg-red-100 text-red-700'
+                                                    : item.status_kehadiran === 'tidak_hadir' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
                                                 }`}>
-                                                {item.attendance}
+                                                {item.status_kehadiran}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
-                                            {item.message ? (
+                                            {item.pesan ? (
                                                 <div className="flex items-start gap-1">
                                                     <MessageSquare className="w-3.5 h-3.5 mt-0.5 text-gray-400 shrink-0" />
-                                                    <span>{item.message}</span>
+                                                    <span title={item.pesan} className="truncate">{item.pesan}</span>
                                                 </div>
                                             ) : (
                                                 <span className="text-gray-300 italic">Tanpa pesan</span>
