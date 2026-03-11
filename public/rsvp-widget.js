@@ -33,8 +33,7 @@
                     color: #333;
                 }
                 #rsvp-widget-form input, 
-                #rsvp-widget-form select, 
-                #rsvp-widget-form textarea {
+                #rsvp-widget-form select {
                     width: 100%;
                     padding: 10px;
                     border: 1px solid #ddd;
@@ -85,12 +84,7 @@
                         <select id="status_kehadiran" name="status_kehadiran" required>
                             <option value="hadir">Hadir</option>
                             <option value="tidak_hadir">Tidak Hadir</option>
-                            <option value="ragu">Masih Ragu</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pesan">Pesan / Ucapan</label>
-                        <textarea id="pesan" name="pesan" rows="3" placeholder="Tuliskan ucapan untuk mempelai"></textarea>
                     </div>
                     <button type="submit" id="rsvpSubmitBtn">Kirim Konfirmasi</button>
                     <div id="rsvp-message"></div>
@@ -114,8 +108,7 @@
                 slug: slug,
                 nama_tamu: formData.get('nama_tamu'),
                 jumlah_kehadiran: parseInt(formData.get('jumlah_kehadiran'), 10),
-                status_kehadiran: formData.get('status_kehadiran'),
-                pesan: formData.get('pesan')
+                status_kehadiran: formData.get('status_kehadiran')
             };
 
             try {

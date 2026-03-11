@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/admin/Layout';
 import { apiAdmin } from '../../utils/api';
-import { Search, UserCheck, MessageSquare } from 'lucide-react';
+import { Search, UserCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminAttendance() {
@@ -13,7 +13,6 @@ export default function AdminAttendance() {
     const fetchAttendances = async () => {
         try {
             const response = await apiAdmin.getAttendance();
-            // response.data contains { data: [...rsvps], stats: { ... } }
             setAttendances(response.data.data);
             setStats(response.data.stats);
         } catch (error) {
@@ -53,7 +52,7 @@ export default function AdminAttendance() {
             </div>
 
             {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col">
                         <span className="text-gray-500 text-sm">Total RSVP</span>
                         <span className="text-2xl font-bold text-gray-800">{stats.total}</span>
@@ -66,13 +65,8 @@ export default function AdminAttendance() {
                         <span className="text-red-600 text-sm">Tidak Hadir</span>
                         <span className="text-2xl font-bold text-red-700">{stats.tidak_hadir}</span>
                     </div>
-                    <div className="bg-yellow-50 p-4 rounded-xl shadow-sm border border-yellow-100 flex flex-col">
-                        <span className="text-yellow-600 text-sm">Ragu</span>
-                        <span className="text-2xl font-bold text-yellow-700">{stats.ragu}</span>
-                    </div>
                 </div>
             )}
-
 
             {loading ? (
                 <div className="text-center py-12 text-gray-500 italic">Memuat data...</div>
@@ -89,7 +83,6 @@ export default function AdminAttendance() {
                                     <th className="px-6 py-4">Tamu</th>
                                     <th className="px-6 py-4">Undangan</th>
                                     <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4">Pesan</th>
                                     <th className="px-6 py-4">Waktu</th>
                                 </tr>
                             </thead>
@@ -113,20 +106,10 @@ export default function AdminAttendance() {
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.status_kehadiran === 'hadir'
                                                     ? 'bg-green-100 text-green-700'
-                                                    : item.status_kehadiran === 'tidak_hadir' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                                                    : 'bg-red-100 text-red-700'
                                                 }`}>
-                                                {item.status_kehadiran}
+                                                {item.status_kehadiran === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
                                             </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
-                                            {item.pesan ? (
-                                                <div className="flex items-start gap-1">
-                                                    <MessageSquare className="w-3.5 h-3.5 mt-0.5 text-gray-400 shrink-0" />
-                                                    <span title={item.pesan} className="truncate">{item.pesan}</span>
-                                                </div>
-                                            ) : (
-                                                <span className="text-gray-300 italic">Tanpa pesan</span>
-                                            )}
                                         </td>
                                         <td className="px-6 py-4 text-gray-500 text-xs">
                                             {new Date(item.created_at).toLocaleString('id-ID', {
