@@ -22,6 +22,7 @@ const Navbar = () => {
         { name: 'Features', href: '/#features' },
         { name: 'Pricing', href: '/#pilihan-paket' },
         { name: 'Catalogue', href: '/#portfolio' },
+        { name: 'Form Order', href: '/forms' },
     ];
 
     const products = [

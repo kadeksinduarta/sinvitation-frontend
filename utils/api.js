@@ -43,6 +43,14 @@ export const apiAdmin = {
     getOrders: () => api.get('/admin/orders'),
     updateOrderStatus: (type, id, status) => api.patch(`/admin/orders/${type}/${id}`, { status }),
 
+    // Individual order type endpoints
+    getWeddingOrders: () => api.get('/admin/orders/wedding'),
+    createWeddingOrder: (data) => api.post('/admin/orders/wedding', data),
+    getBirthdayOrders: () => api.get('/admin/orders/birthday'),
+    createBirthdayOrder: (data) => api.post('/admin/orders/birthday', data),
+    getMetatahOrders: () => api.get('/admin/orders/metatah'),
+    createMetatahOrder: (data) => api.post('/admin/orders/metatah', data),
+
     // Products
     getProducts: () => api.get('/admin/products'),
     createProduct: (data) => api.post('/admin/products', data, { headers: { 'Content-Type': 'multipart/form-data' } }),

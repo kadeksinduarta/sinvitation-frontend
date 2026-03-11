@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { apiClient } from '../../../utils/api';
-import { UserCheck, MessageSquare, ArrowLeft } from 'lucide-react';
+import { UserCheck, Users, ArrowLeft } from 'lucide-react';
 import Head from 'next/head';
 
 export default function ClientAttendance() {
     const router = useRouter();
     const { slug } = router.query;
     const [attendances, setAttendances] = useState([]);
+    const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const fetchAttendances = async () => {
         if (!slug) return;
         try {
             const response = await apiClient.getAttendanceBySlug(slug);
-            setAttendances(response.data);
+            setAttendances(response.data.data || []);
+            setStats(response.data.stats || null);
         } catch (error) {
             console.error('Failed to fetch attendance:', error);
         } finally {
@@ -45,7 +47,7 @@ export default function ClientAttendance() {
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 capitalize">Tamu Undangan {slug}</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 capitalize">Tamu Undangan {slug?.replace(/-/g, ' ')}</h1>
                         <p className="text-gray-500">Daftar pesan dan konfirmasi kehadiran tamu Anda</p>
                     </div>
                 </div>
@@ -67,15 +69,21 @@ export default function ClientAttendance() {
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 mb-2">
+                        <div className="grid grid-cols-3 gap-4 mb-2">
                             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Tamu</p>
-                                <p className="text-2xl font-bold text-gray-900">{attendances.length}</p>
+                                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Total RSVP</p>
+                                <p className="text-2xl font-bold text-gray-900">{stats?.total || attendances.length}</p>
                             </div>
                             <div className="bg-green-50 p-4 rounded-xl shadow-sm border border-green-100">
                                 <p className="text-xs text-green-600 uppercase font-bold tracking-wider">Hadir</p>
                                 <p className="text-2xl font-bold text-green-700">
-                                    {attendances.filter(a => a.attendance === 'Hadir').length}
+                                    {stats?.hadir || attendances.filter(a => a.status_kehadiran === 'hadir').length}
+                                </p>
+                            </div>
+                            <div className="bg-red-50 p-4 rounded-xl shadow-sm border border-red-100">
+                                <p className="text-xs text-red-600 uppercase font-bold tracking-wider">Tidak Hadir</p>
+                                <p className="text-2xl font-bold text-red-700">
+                                    {stats?.tidak_hadir || attendances.filter(a => a.status_kehadiran === 'tidak_hadir').length}
                                 </p>
                             </div>
                         </div>
@@ -87,24 +95,23 @@ export default function ClientAttendance() {
                                         <div className="flex justify-between items-start mb-2">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
-                                                    {item.guest_name.charAt(0).toUpperCase()}
+                                                    {item.nama_tamu?.charAt(0).toUpperCase()}
                                                 </div>
-                                                <h4 className="font-bold text-gray-900">{item.guest_name}</h4>
+                                                <div>
+                                                    <h4 className="font-bold text-gray-900">{item.nama_tamu}</h4>
+                                                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                                                        <Users className="w-3 h-3" />
+                                                        <span>{item.jumlah_kehadiran} orang</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${item.attendance === 'Hadir'
+                                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${item.status_kehadiran === 'hadir'
                                                     ? 'bg-green-100 text-green-700'
                                                     : 'bg-red-100 text-red-700'
                                                 }`}>
-                                                {item.attendance}
+                                                {item.status_kehadiran === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
                                             </span>
                                         </div>
-
-                                        {item.message && (
-                                            <div className="mt-3 flex gap-2 text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100 italic text-sm">
-                                                <MessageSquare className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
-                                                <p>{item.message}</p>
-                                            </div>
-                                        )}
 
                                         <div className="mt-4 text-[10px] text-gray-400 text-right">
                                             {new Date(item.created_at).toLocaleDateString('id-ID', {
