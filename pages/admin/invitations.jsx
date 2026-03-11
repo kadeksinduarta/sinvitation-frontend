@@ -8,7 +8,7 @@ export default function AdminInvitations() {
     const [invitations, setInvitations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
-    const [formData, setFormData] = useState({ slug: '', client_name: '' });
+    const [formData, setFormData] = useState({ slug: '', nama_pengantin: '' });
     const [copiedId, setCopiedId] = useState(null);
 
     const fetchInvitations = async () => {
@@ -32,7 +32,7 @@ export default function AdminInvitations() {
         try {
             await apiAdmin.createInvitation(formData);
             toast.success('Undangan berhasil dibuat');
-            setFormData({ slug: '', client_name: '' });
+            setFormData({ slug: '', nama_pengantin: '' });
             setIsAdding(false);
             fetchInvitations();
         } catch (error) {
@@ -79,13 +79,13 @@ export default function AdminInvitations() {
                     <h2 className="text-lg font-bold mb-4 text-gray-800">Buat Undangan Baru</h2>
                     <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Client</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Pengantin</label>
                             <input
                                 type="text"
-                                placeholder="Contoh: Sindu & Tasya"
+                                placeholder="Contoh: Dwadnyana & Elwi"
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-                                value={formData.client_name}
-                                onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
+                                value={formData.nama_pengantin}
+                                onChange={(e) => setFormData({ ...formData, nama_pengantin: e.target.value })}
                                 required
                             />
                         </div>
@@ -125,7 +125,7 @@ export default function AdminInvitations() {
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Globe className="w-4 h-4 text-blue-500" />
-                                    <h3 className="font-bold text-gray-900 text-lg">{item.client_name}</h3>
+                                    <h3 className="font-bold text-gray-900 text-lg">{item.nama_pengantin}</h3>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-500">
                                     <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">Slug: {item.slug}</span>
