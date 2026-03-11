@@ -8,7 +8,7 @@ export default function AdminInvitations() {
     const [invitations, setInvitations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
-    const [formData, setFormData] = useState({ slug: '', nama_pengantin: '' });
+    const [formData, setFormData] = useState({ nama_pengantin: '' });
     const [copiedId, setCopiedId] = useState(null);
 
     const fetchInvitations = async () => {
@@ -32,7 +32,7 @@ export default function AdminInvitations() {
         try {
             await apiAdmin.createInvitation(formData);
             toast.success('Undangan berhasil dibuat');
-            setFormData({ slug: '', nama_pengantin: '' });
+            setFormData({ nama_pengantin: '' });
             setIsAdding(false);
             fetchInvitations();
         } catch (error) {
@@ -77,7 +77,7 @@ export default function AdminInvitations() {
             {isAdding && (
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100 mb-6 animate-in fade-in slide-in-from-top-4">
                     <h2 className="text-lg font-bold mb-4 text-gray-800">Buat Undangan Baru</h2>
-                    <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Nama Pengantin</label>
                             <input
@@ -88,17 +88,7 @@ export default function AdminInvitations() {
                                 onChange={(e) => setFormData({ ...formData, nama_pengantin: e.target.value })}
                                 required
                             />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Slug (Link)</label>
-                            <input
-                                type="text"
-                                placeholder="Contoh: sindu-tasya"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-                                value={formData.slug}
-                                onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                                required
-                            />
+                            <p className="text-xs text-gray-400 mt-1">Slug akan dibuat otomatis, contoh: dwadnyana-elwi</p>
                         </div>
                         <div className="flex items-end">
                             <button
