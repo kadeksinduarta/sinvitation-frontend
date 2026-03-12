@@ -106,10 +106,13 @@ export default function OrderModal({ order, isOpen, onClose, onUpdate }) {
                                 <h3 className="font-semibold text-gray-900 mb-3">Bukti Transfer</h3>
                                 {order.bukti_tranfer ? (
                                     <a href={getStorageUrl(order.bukti_tranfer)} target="_blank" rel="noopener noreferrer" className="block relative group rounded-lg overflow-hidden border">
-                                        <div className="w-full h-32 bg-gray-200 flex items-center justify-center text-gray-500 bg-cover bg-center" style={{ backgroundImage: `url(${getStorageUrl(order.bukti_tranfer)})` }}>
-                                        </div>
+                                        <img 
+                                            src={getStorageUrl(order.bukti_tranfer)} 
+                                            alt="Bukti Transfer" 
+                                            className="w-full h-32 object-cover bg-gray-100" 
+                                        />
                                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
-                                            <span className="text-white opacity-0 group-hover:opacity-100 font-medium text-sm">Lihat Full</span>
+                                            <span className="text-white opacity-0 group-hover:opacity-100 font-medium text-sm drop-shadow-md">Lihat Full</span>
                                         </div>
                                     </a>
                                 ) : <span className="text-gray-500 italic text-sm">Tidak ada bukti transfer</span>}
