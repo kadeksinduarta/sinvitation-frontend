@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { LayoutGrid, ClipboardList, LogOut, Package, UserCheck, Key } from 'lucide-react';
+import { LayoutGrid, ClipboardList, LogOut, Package, UserCheck, Key, Send } from 'lucide-react';
 import { apiAuth } from '../../utils/api';
 
 export default function Sidebar() {
@@ -65,6 +65,14 @@ export default function Sidebar() {
                 <Link href="/admin/products" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/products') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                     <Package className="w-5 h-5 mr-3" />
                     Data Produk
+                </Link>
+
+                <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Layanan Klien
+                </div>
+                <Link href="/admin/kirim-pesan" className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ${isActive('/admin/kirim-pesan') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                    <Send className="w-5 h-5 mr-3" />
+                    Serah Terima
                 </Link>
             </nav>
 
