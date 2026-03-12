@@ -27,6 +27,35 @@ const initialForm = {
     bukti_tranfer: null,
 };
 
+const InputField = ({ label, name, type = 'text', required = false, placeholder = '', icon: Icon, value, onChange }) => (
+        <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <div className="relative">
+                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
+                <input
+                    type={type}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    placeholder={placeholder}
+                    className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-sm transition-all bg-white`}
+                />
+            </div>
+        </div>
+    );
+
+const SectionTitle = ({ icon: Icon, title }) => (
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-purple-100">
+            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Icon className="w-4 h-4 text-purple-600" />
+            </div>
+            <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider">{title}</h3>
+        </div>
+    );
+
 export default function MetatahForm() {
     const router = useRouter();
     const [formData, setFormData] = useState(initialForm);
@@ -121,35 +150,8 @@ export default function MetatahForm() {
         );
     }
 
-    const InputField = ({ label, name, type = 'text', required = false, placeholder = '', icon: Icon }) => (
-        <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                {label} {required && <span className="text-red-500">*</span>}
-            </label>
-            <div className="relative">
-                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
-                <input
-                    type={type}
-                    name={name}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    required={required}
-                    placeholder={placeholder}
-                    className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-sm transition-all bg-white`}
-                />
-            </div>
-        </div>
-    );
-
-    const SectionTitle = ({ icon: Icon, title }) => (
-        <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-purple-100">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Icon className="w-4 h-4 text-purple-600" />
-            </div>
-            <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider">{title}</h3>
-        </div>
-    );
-
+    
+    
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-violet-50 py-8 px-4">
             <Head><title>Form Pengisian Data Metatah | Sinvitation</title></Head>
@@ -173,9 +175,9 @@ export default function MetatahForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={User} title="Informasi Pemesan" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Nama Pemesan" name="nama_pemesan" required placeholder="Nama lengkap pemesan" icon={User} />
-                            <InputField label="No. HP / WhatsApp" name="no_hp" placeholder="08xxxxxxxxxx" />
-                            <InputField label="Link Template" name="link_template" required placeholder="Pilih template dari katalog kami" />
+                            <InputField label="Nama Pemesan" name="nama_pemesan" value={formData.nama_pemesan} onChange={handleChange} required placeholder="Nama lengkap pemesan" icon={User} />
+                            <InputField label="No. HP / WhatsApp" name="no_hp" value={formData.no_hp} onChange={handleChange} placeholder="08xxxxxxxxxx" />
+                            <InputField label="Link Template" name="link_template" value={formData.link_template} onChange={handleChange} required placeholder="Pilih template dari katalog kami" />
                             <div className="flex items-center gap-3 pt-6">
                                 <input type="checkbox" name="isi_foto" checked={formData.isi_foto} onChange={handleChange} className="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
                                 <label className="text-sm font-medium text-gray-700">Admin mengisikan foto</label>
@@ -187,7 +189,7 @@ export default function MetatahForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Users} title="Detail Orang Tua" />
                         <div>
-                            <InputField label="Detail Nama Orang Tua" name="detail_nama_ortu" required placeholder="Nama lengkap orang tua" />
+                            <InputField label="Detail Nama Orang Tua" name="detail_nama_ortu" value={formData.detail_nama_ortu} onChange={handleChange} required placeholder="Nama lengkap orang tua" />
                         </div>
                     </div>
 
@@ -241,10 +243,10 @@ export default function MetatahForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Calendar} title="Detail Acara" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Tanggal Acara" name="tanggal_acara" type="date" required icon={Calendar} />
-                            <InputField label="Waktu Acara" name="waktu_acara" required placeholder="08:00 - 12:00 WITA" />
-                            <InputField label="Alamat Acara" name="alamat_acara" required placeholder="Alamat lengkap lokasi" icon={MapPin} />
-                            <InputField label="Link Google Maps" name="link_lokasi_acara" required placeholder="https://maps.google.com/..." />
+                            <InputField label="Tanggal Acara" name="tanggal_acara" value={formData.tanggal_acara} onChange={handleChange} type="date" required icon={Calendar} />
+                            <InputField label="Waktu Acara" name="waktu_acara" value={formData.waktu_acara} onChange={handleChange} required placeholder="08:00 - 12:00 WITA" />
+                            <InputField label="Alamat Acara" name="alamat_acara" value={formData.alamat_acara} onChange={handleChange} required placeholder="Alamat lengkap lokasi" icon={MapPin} />
+                            <InputField label="Link Google Maps" name="link_lokasi_acara" value={formData.link_lokasi_acara} onChange={handleChange} required placeholder="https://maps.google.com/..." />
                         </div>
                     </div>
 
@@ -252,10 +254,10 @@ export default function MetatahForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={PartyPopper} title="Resepsi (Opsional)" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Tanggal Resepsi" name="tanggal_resepsi" type="date" icon={Calendar} />
-                            <InputField label="Waktu Resepsi" name="waktu_resepsi" placeholder="18:00 - 21:00 WITA" />
-                            <InputField label="Alamat Resepsi" name="alamat_resepsi" placeholder="Alamat lengkap lokasi" icon={MapPin} />
-                            <InputField label="Link Google Maps" name="link_lokasi_resepsi" placeholder="https://maps.google.com/..." />
+                            <InputField label="Tanggal Resepsi" name="tanggal_resepsi" value={formData.tanggal_resepsi} onChange={handleChange} type="date" icon={Calendar} />
+                            <InputField label="Waktu Resepsi" name="waktu_resepsi" value={formData.waktu_resepsi} onChange={handleChange} placeholder="18:00 - 21:00 WITA" />
+                            <InputField label="Alamat Resepsi" name="alamat_resepsi" value={formData.alamat_resepsi} onChange={handleChange} placeholder="Alamat lengkap lokasi" icon={MapPin} />
+                            <InputField label="Link Google Maps" name="link_lokasi_resepsi" value={formData.link_lokasi_resepsi} onChange={handleChange} placeholder="https://maps.google.com/..." />
                         </div>
                     </div>
 
@@ -263,8 +265,8 @@ export default function MetatahForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Music} title="Media & Tambahan" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Link Drive Foto" name="link_drive_foto" placeholder="https://drive.google.com/..." icon={Image} />
-                            <InputField label="Lagu / Backsound" name="lagu" placeholder="Judul lagu atau link YouTube" icon={Music} />
+                            <InputField label="Link Drive Foto" name="link_drive_foto" value={formData.link_drive_foto} onChange={handleChange} placeholder="https://drive.google.com/..." icon={Image} />
+                            <InputField label="Lagu / Backsound" name="lagu" value={formData.lagu} onChange={handleChange} placeholder="Judul lagu atau link YouTube" icon={Music} />
                         </div>
                         <div className="mt-4">
                             <label className="block text-sm font-semibold text-gray-700 mb-1.5">Catatan Tambahan</label>

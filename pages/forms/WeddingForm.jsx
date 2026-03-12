@@ -36,6 +36,35 @@ const initialForm = {
     bukti_tranfer: null,
 };
 
+const InputField = ({ label, name, type = 'text', required = false, placeholder = '', icon: Icon, value, onChange }) => (
+        <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                {label} {required && <span className="text-red-500">*</span>}
+            </label>
+            <div className="relative">
+                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
+                <input
+                    type={type}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    placeholder={placeholder}
+                    className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none text-sm transition-all bg-white`}
+                />
+            </div>
+        </div>
+    );
+
+const SectionTitle = ({ icon: Icon, title, color = 'pink' }) => (
+        <div className={`flex items-center gap-3 mb-4 pb-3 border-b-2 border-${color}-100`}>
+            <div className={`w-8 h-8 bg-${color}-100 rounded-lg flex items-center justify-center`}>
+                <Icon className={`w-4 h-4 text-${color}-600`} />
+            </div>
+            <h3 className={`text-sm font-bold text-${color}-700 uppercase tracking-wider`}>{title}</h3>
+        </div>
+    );
+
 export default function WeddingForm() {
     const router = useRouter();
     const [formData, setFormData] = useState(initialForm);
@@ -104,35 +133,8 @@ export default function WeddingForm() {
         );
     }
 
-    const InputField = ({ label, name, type = 'text', required = false, placeholder = '', icon: Icon }) => (
-        <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                {label} {required && <span className="text-red-500">*</span>}
-            </label>
-            <div className="relative">
-                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
-                <input
-                    type={type}
-                    name={name}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    required={required}
-                    placeholder={placeholder}
-                    className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none text-sm transition-all bg-white`}
-                />
-            </div>
-        </div>
-    );
-
-    const SectionTitle = ({ icon: Icon, title, color = 'pink' }) => (
-        <div className={`flex items-center gap-3 mb-4 pb-3 border-b-2 border-${color}-100`}>
-            <div className={`w-8 h-8 bg-${color}-100 rounded-lg flex items-center justify-center`}>
-                <Icon className={`w-4 h-4 text-${color}-600`} />
-            </div>
-            <h3 className={`text-sm font-bold text-${color}-700 uppercase tracking-wider`}>{title}</h3>
-        </div>
-    );
-
+    
+    
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 py-8 px-4">
             <Head><title>Form Pengisian Data Wedding | Sinvitation</title></Head>
@@ -156,11 +158,11 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={User} title="Informasi Pemesan" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Nama Pemesan" name="nama_pemesan" required placeholder="Nama lengkap pemesan" icon={User} />
-                            <InputField label="No. HP / WhatsApp" name="no_hp" required placeholder="08xxxxxxxxxx" />
-                            <InputField label="Link Template" name="link_template" required placeholder="Pilih template dari katalog kami" />
-                            <InputField label="Susunan Nama Mempelai" name="susunan_nama_mempelai" placeholder="Contoh: Pria & Wanita" />
-                            <InputField label="Agama" name="agama" placeholder="Hindu / Islam / Kristen / dll" />
+                            <InputField label="Nama Pemesan" name="nama_pemesan" value={formData.nama_pemesan} onChange={handleChange} required placeholder="Nama lengkap pemesan" icon={User} />
+                            <InputField label="No. HP / WhatsApp" name="no_hp" value={formData.no_hp} onChange={handleChange} required placeholder="08xxxxxxxxxx" />
+                            <InputField label="Link Template" name="link_template" value={formData.link_template} onChange={handleChange} required placeholder="Pilih template dari katalog kami" />
+                            <InputField label="Susunan Nama Mempelai" name="susunan_nama_mempelai" value={formData.susunan_nama_mempelai} onChange={handleChange} placeholder="Contoh: Pria & Wanita" />
+                            <InputField label="Agama" name="agama" value={formData.agama} onChange={handleChange} placeholder="Hindu / Islam / Kristen / dll" />
                             <div className="flex items-center gap-3 pt-6">
                                 <input type="checkbox" name="isi_foto" checked={formData.isi_foto} onChange={handleChange} className="w-5 h-5 rounded border-gray-300 text-pink-600 focus:ring-pink-500" />
                                 <label className="text-sm font-medium text-gray-700">Admin mengisikan foto</label>
@@ -172,10 +174,10 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Heart} title="Data Mempelai Wanita" color="pink" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Nama Panggilan" name="nama_panggilan_wanita" required placeholder="Nama panggilan" />
-                            <InputField label="Nama Lengkap" name="nama_lengkap_wanita" required placeholder="Nama lengkap dengan gelar" />
-                            <InputField label="Nama Orang Tua" name="nama_ortu_wanita" required placeholder="Puteri dari Bapak ... & Ibu ..." />
-                            <InputField label="Instagram" name="ig_wanita" placeholder="@username" />
+                            <InputField label="Nama Panggilan" name="nama_panggilan_wanita" value={formData.nama_panggilan_wanita} onChange={handleChange} required placeholder="Nama panggilan" />
+                            <InputField label="Nama Lengkap" name="nama_lengkap_wanita" value={formData.nama_lengkap_wanita} onChange={handleChange} required placeholder="Nama lengkap dengan gelar" />
+                            <InputField label="Nama Orang Tua" name="nama_ortu_wanita" value={formData.nama_ortu_wanita} onChange={handleChange} required placeholder="Puteri dari Bapak ... & Ibu ..." />
+                            <InputField label="Instagram" name="ig_wanita" value={formData.ig_wanita} onChange={handleChange} placeholder="@username" />
                         </div>
                     </div>
 
@@ -183,10 +185,10 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Users} title="Data Mempelai Pria" color="pink" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Nama Panggilan" name="nama_panggilan_pria" required placeholder="Nama panggilan" />
-                            <InputField label="Nama Lengkap" name="nama_lengkap_pria" required placeholder="Nama lengkap dengan gelar" />
-                            <InputField label="Nama Orang Tua" name="nama_ortu_pria" required placeholder="Putera dari Bapak ... & Ibu ..." />
-                            <InputField label="Instagram" name="ig_pria" placeholder="@username" />
+                            <InputField label="Nama Panggilan" name="nama_panggilan_pria" value={formData.nama_panggilan_pria} onChange={handleChange} required placeholder="Nama panggilan" />
+                            <InputField label="Nama Lengkap" name="nama_lengkap_pria" value={formData.nama_lengkap_pria} onChange={handleChange} required placeholder="Nama lengkap dengan gelar" />
+                            <InputField label="Nama Orang Tua" name="nama_ortu_pria" value={formData.nama_ortu_pria} onChange={handleChange} required placeholder="Putera dari Bapak ... & Ibu ..." />
+                            <InputField label="Instagram" name="ig_pria" value={formData.ig_pria} onChange={handleChange} placeholder="@username" />
                         </div>
                     </div>
 
@@ -194,10 +196,10 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Church} title="Akad / Pemberkatan" color="pink" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Tanggal Pernikahan" name="tanggal_pernikahan" type="date" required icon={Calendar} />
-                            <InputField label="Waktu" name="waktu_pernikahan" required placeholder="08:00 - 12:00 WITA" />
-                            <InputField label="Alamat" name="alamat_pernikahan" required placeholder="Alamat lengkap lokasi" icon={MapPin} />
-                            <InputField label="Link Google Maps" name="link_lokasi_pernikahan" required placeholder="https://maps.google.com/..." />
+                            <InputField label="Tanggal Pernikahan" name="tanggal_pernikahan" value={formData.tanggal_pernikahan} onChange={handleChange} type="date" required icon={Calendar} />
+                            <InputField label="Waktu" name="waktu_pernikahan" value={formData.waktu_pernikahan} onChange={handleChange} required placeholder="08:00 - 12:00 WITA" />
+                            <InputField label="Alamat" name="alamat_pernikahan" value={formData.alamat_pernikahan} onChange={handleChange} required placeholder="Alamat lengkap lokasi" icon={MapPin} />
+                            <InputField label="Link Google Maps" name="link_lokasi_pernikahan" value={formData.link_lokasi_pernikahan} onChange={handleChange} required placeholder="https://maps.google.com/..." />
                         </div>
                     </div>
 
@@ -205,10 +207,10 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={PartyPopper} title="Resepsi (Opsional)" color="pink" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Tanggal Resepsi" name="tanggal_resepsi" type="date" icon={Calendar} />
-                            <InputField label="Waktu" name="waktu_resepsi" placeholder="18:00 - 21:00 WITA" />
-                            <InputField label="Alamat" name="alamat_resepsi" placeholder="Alamat lengkap lokasi" icon={MapPin} />
-                            <InputField label="Link Google Maps" name="link_lokasi_resepsi" placeholder="https://maps.google.com/..." />
+                            <InputField label="Tanggal Resepsi" name="tanggal_resepsi" value={formData.tanggal_resepsi} onChange={handleChange} type="date" icon={Calendar} />
+                            <InputField label="Waktu" name="waktu_resepsi" value={formData.waktu_resepsi} onChange={handleChange} placeholder="18:00 - 21:00 WITA" />
+                            <InputField label="Alamat" name="alamat_resepsi" value={formData.alamat_resepsi} onChange={handleChange} placeholder="Alamat lengkap lokasi" icon={MapPin} />
+                            <InputField label="Link Google Maps" name="link_lokasi_resepsi" value={formData.link_lokasi_resepsi} onChange={handleChange} placeholder="https://maps.google.com/..." />
                         </div>
                     </div>
 
@@ -216,14 +218,14 @@ export default function WeddingForm() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <SectionTitle icon={Music} title="Media & Tambahan" color="pink" />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField label="Link Drive Foto" name="link_drive_foto" placeholder="https://drive.google.com/..." icon={Image} />
-                            <InputField label="Lagu / Backsound" name="lagu" placeholder="Judul lagu atau link YouTube" icon={Music} />
+                            <InputField label="Link Drive Foto" name="link_drive_foto" value={formData.link_drive_foto} onChange={handleChange} placeholder="https://drive.google.com/..." icon={Image} />
+                            <InputField label="Lagu / Backsound" name="lagu" value={formData.lagu} onChange={handleChange} placeholder="Judul lagu atau link YouTube" icon={Music} />
                             <div className="flex items-center gap-3 pt-2">
                                 <input type="checkbox" name="amplop_digital" checked={formData.amplop_digital} onChange={handleChange} className="w-5 h-5 rounded border-gray-300 text-pink-600 focus:ring-pink-500" />
                                 <label className="text-sm font-medium text-gray-700">Ampop Digital</label>
                             </div>
                             {formData.amplop_digital && (
-                                <InputField label="No. Rekening" name="no_rek" placeholder="No. Rekening bank" icon={CreditCard} />
+                                <InputField label="No. Rekening" name="no_rek" value={formData.no_rek} onChange={handleChange} placeholder="No. Rekening bank" icon={CreditCard} />
                             )}
                         </div>
                         <div className="mt-4">
