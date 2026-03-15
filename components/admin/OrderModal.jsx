@@ -177,7 +177,17 @@ export default function OrderModal({ order, isOpen, onClose, onUpdate }) {
                                 <>
                                     <div className="md:col-span-2 mb-6">
                                         <h4 className="font-bold text-gray-900 mb-3 pb-2 border-b">Data Orang Tua</h4>
-                                        <DetailRow label="Detail Lengkap" value={order.detail_nama_ortu} />
+                                        {Array.isArray(order.data_ortu) && order.data_ortu.length > 0 ? (
+                                            <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                                                {order.data_ortu.map((ortu, idx) => (
+                                                    <div key={idx} className="mb-2 last:mb-0">
+                                                        <DetailRow label={`Keluarga / Tuan Rumah #${idx + 1}`} value={ortu.nama} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <DetailRow label="Detail Lengkap" value={order.detail_nama_ortu} />
+                                        )}
                                     </div>
 
                                     <div className="md:col-span-2">

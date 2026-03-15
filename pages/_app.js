@@ -5,11 +5,11 @@ import MaintenanceBanner from '@/components/MaintenanceBanner';
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
-    const isAdmin = router.pathname.startsWith('/admin');
+    const isHomePage = router.pathname === '/';
 
     return (
         <>
-            {!isAdmin && <MaintenanceBanner />}
+            {isHomePage && <MaintenanceBanner />}
             <Component {...pageProps} />
             <Toaster position="top-center" />
         </>

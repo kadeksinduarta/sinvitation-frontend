@@ -14,6 +14,7 @@ const initialMetatahForm = {
     lagu: '',
     catatan: '',
     detail_nama_ortu: '',
+    data_ortu: [{ nama: '' }],
     jumlah_peserta: '',
     data_peserta: [],
     tanggal_acara: '',
@@ -89,6 +90,28 @@ export default function AdminMetatah() {
         }));
     };
 
+    // Ortu handlers
+    const addOrtu = () => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: [...prev.data_ortu, { nama: '' }],
+        }));
+    };
+
+    const removeOrtu = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: prev.data_ortu.filter((_, i) => i !== index),
+        }));
+    };
+
+    const updateOrtu = (index, value) => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: prev.data_ortu.map((p, i) => i === index ? { ...p, nama: value } : p)
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -97,6 +120,7 @@ export default function AdminMetatah() {
                 ...formData,
                 jumlah_peserta: formData.data_peserta.length || formData.jumlah_peserta,
                 data_peserta: JSON.stringify(formData.data_peserta),
+                data_ortu: JSON.stringify(formData.data_ortu),
             };
             await apiAdmin.createMetatahOrder(submitData);
             toast.success('Data metatah berhasil disimpan!');
@@ -178,9 +202,40 @@ export default function AdminMetatah() {
 
                         {/* Detail Orang Tua */}
                         <div>
-                            <h3 className="text-sm font-bold text-purple-600 uppercase tracking-wider mb-3 pb-2 border-b border-purple-100">Detail Orang Tua</h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                <InputField label="Detail Nama Orang Tua" name="detail_nama_ortu" placeholder="Nama lengkap orang tua" />
+                            <h3 className="text-sm font-bold text-purple-600 uppercase tracking-wider mb-3 pb-2 border-b border-purple-100">
+                                Keluarga / Tuan Rumah ({formData.data_ortu.length})
+                            </h3>
+                            <div className="space-y-3">
+                                {formData.data_ortu.map((ortu, index) => (
+                                    <div key={index} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                        <span className="text-xs font-bold text-gray-400 w-6 shrink-0">#{index + 1}</span>
+                                        <input
+                                            type="text"
+                                            placeholder="Cth: Keluarga Bpk. Budi & Ibu Ani"
+                                            value={ortu.nama}
+                                            onChange={(e) => updateOrtu(index, e.target.value)}
+                                            className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none text-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeOrtu(index)}
+                                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={addOrtu}
+                                    className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors text-sm font-medium"
+                                >
+                                    <UserPlus className="w-4 h-4" />
+                                    Tambah Keluarga / Orang Tua
+                                </button>
+                                <div className="mt-4 border-t pt-4 border-purple-100">
+                                     <InputField label="Atau Detail Nama Orang Tua (Manual)" name="detail_nama_ortu" placeholder="Nama lengkap orang tua" />
+                                </div>
                             </div>
                         </div>
 

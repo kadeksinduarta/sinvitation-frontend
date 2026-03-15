@@ -11,6 +11,7 @@ const initialForm = {
     isi_foto: false,
     link_template: '',
     detail_nama_ortu: '',
+    data_ortu: [{ nama: '' }],
     jumlah_peserta: '',
     data_peserta: [],
     tanggal_acara: '',
@@ -28,33 +29,33 @@ const initialForm = {
 };
 
 const InputField = ({ label, name, type = 'text', required = false, placeholder = '', icon: Icon, value, onChange }) => (
-        <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                {label} {required && <span className="text-red-500">*</span>}
-            </label>
-            <div className="relative">
-                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
-                <input
-                    type={type}
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                    required={required}
-                    placeholder={placeholder}
-                    className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-sm transition-all bg-white`}
-                />
-            </div>
+    <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            {label} {required && <span className="text-red-500">*</span>}
+        </label>
+        <div className="relative">
+            {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />}
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={onChange}
+                required={required}
+                placeholder={placeholder}
+                className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-sm transition-all bg-white`}
+            />
         </div>
-    );
+    </div>
+);
 
 const SectionTitle = ({ icon: Icon, title }) => (
-        <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-purple-100">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Icon className="w-4 h-4 text-purple-600" />
-            </div>
-            <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider">{title}</h3>
+    <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-purple-100">
+        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+            <Icon className="w-4 h-4 text-purple-600" />
         </div>
-    );
+        <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider">{title}</h3>
+    </div>
+);
 
 export default function MetatahForm() {
     const router = useRouter();
@@ -101,6 +102,28 @@ export default function MetatahForm() {
         }));
     };
 
+    // Ortu handlers
+    const addOrtu = () => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: [...prev.data_ortu, { nama: '' }],
+        }));
+    };
+
+    const removeOrtu = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: prev.data_ortu.filter((_, i) => i !== index),
+        }));
+    };
+
+    const updateOrtu = (index, value) => {
+        setFormData(prev => ({
+            ...prev,
+            data_ortu: prev.data_ortu.map((p, i) => i === index ? { ...p, nama: value } : p)
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -112,6 +135,8 @@ export default function MetatahForm() {
                 } else if (key === 'isi_foto') {
                     data.append(key, formData[key] ? '1' : '0');
                 } else if (key === 'data_peserta') {
+                    data.append(key, JSON.stringify(formData[key]));
+                } else if (key === 'data_ortu') {
                     data.append(key, JSON.stringify(formData[key]));
                 } else if (key === 'jumlah_peserta') {
                     data.append(key, formData.data_peserta.length.toString());
@@ -150,8 +175,8 @@ export default function MetatahForm() {
         );
     }
 
-    
-    
+
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-violet-50 py-8 px-4">
             <Head><title>Form Pengisian Data Metatah | Sinvitation</title></Head>
@@ -187,9 +212,39 @@ export default function MetatahForm() {
 
                     {/* Detail Orang Tua */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <SectionTitle icon={Users} title="Detail Orang Tua" />
-                        <div>
-                            <InputField label="Detail Nama Orang Tua" name="detail_nama_ortu" value={formData.detail_nama_ortu} onChange={handleChange} required placeholder="Nama lengkap orang tua" />
+                        <SectionTitle icon={Users} title={`Keluarga / Tuan Rumah (${formData.data_ortu.length})`} />
+                        <div className="space-y-3">
+                            {formData.data_ortu.map((ortu, index) => (
+                                <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+                                    <span className="text-xs font-bold text-purple-400 w-8 shrink-0">#{index + 1}</span>
+                                    <div className="flex-1 w-full relative">
+                                        <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Cth: Bpk. Budi & Ibu Ani (orang tua dari nama peserta metatah)"
+                                            value={ortu.nama}
+                                            onChange={(e) => updateOrtu(index, e.target.value)}
+                                            required
+                                            className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 outline-none text-sm bg-white"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeOrtu(index)}
+                                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addOrtu}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-purple-100 text-purple-700 rounded-xl hover:bg-purple-200 transition-colors text-sm font-bold w-full justify-center"
+                            >
+                                <UserPlus className="w-4 h-4" />
+                                Tambah Keluarga / Orang Tua
+                            </button>
                         </div>
                     </div>
 
