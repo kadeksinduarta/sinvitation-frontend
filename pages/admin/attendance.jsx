@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/admin/Layout';
 import { apiAdmin } from '../../utils/api';
-import { Search, UserCheck } from 'lucide-react';
+import { Search, UserCheck, Edit, Trash2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminAttendance() {
@@ -9,6 +9,11 @@ export default function AdminAttendance() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    
+    // Modal states
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingRsvp, setEditingRsvp] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
 
     const fetchAttendances = async () => {
         try {
@@ -26,6 +31,55 @@ export default function AdminAttendance() {
     useEffect(() => {
         fetchAttendances();
     }, []);
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Apakah Anda yakin ingin menghapus data kehadiran ini?')) return;
+        
+        try {
+            await apiAdmin.deleteAttendance(id);
+            toast.success('Data kehadiran berhasil dihapus');
+            fetchAttendances();
+        } catch (error) {
+            console.error('Failed to delete attendance:', error);
+            toast.error('Gagal menghapus data kehadiran');
+        }
+    };
+
+    const handleEditClick = (rsvp) => {
+        setEditingRsvp({
+            ...rsvp,
+            status_kehadiran: rsvp.status_kehadiran
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleEditChange = (e) => {
+        const { name, value, type } = e.target;
+        setEditingRsvp(prev => ({
+            ...prev,
+            [name]: type === 'number' ? parseInt(value) || 0 : value
+        }));
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            await apiAdmin.updateAttendance(editingRsvp.id, {
+                nama_tamu: editingRsvp.nama_tamu,
+                jumlah_kehadiran: editingRsvp.jumlah_kehadiran,
+                status_kehadiran: editingRsvp.status_kehadiran
+            });
+            toast.success('Data kehadiran berhasil diperbarui');
+            setIsEditModalOpen(false);
+            fetchAttendances();
+        } catch (error) {
+            console.error('Failed to update attendance:', error);
+            toast.error('Gagal memperbarui data kehadiran');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const filteredAttendances = attendances.filter(item =>
         item.nama_tamu?.toLowerCase().includes(search.toLowerCase()) ||
@@ -84,6 +138,7 @@ export default function AdminAttendance() {
                                     <th className="px-6 py-4">Undangan</th>
                                     <th className="px-6 py-4">Status</th>
                                     <th className="px-6 py-4">Waktu</th>
+                                    <th className="px-6 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 text-sm">
@@ -117,10 +172,96 @@ export default function AdminAttendance() {
                                                 hour: '2-digit', minute: '2-digit'
                                             })}
                                         </td>
+                                        <td className="px-6 py-4 text-center">
+                                            <div className="flex justify-center gap-2">
+                                                <button
+                                                    onClick={() => handleEditClick(item)}
+                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(item.id)}
+                                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Modal */}
+            {isEditModalOpen && editingRsvp && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative">
+                        <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                            <h3 className="text-xl font-bold text-gray-800">Edit Data Kehadiran</h3>
+                            <button onClick={() => setIsEditModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Nama Tamu</label>
+                                <input
+                                    type="text"
+                                    name="nama_tamu"
+                                    value={editingRsvp.nama_tamu}
+                                    onChange={handleEditChange}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Jumlah Hadir (Orang)</label>
+                                <input
+                                    type="number"
+                                    name="jumlah_kehadiran"
+                                    value={editingRsvp.jumlah_kehadiran}
+                                    onChange={handleEditChange}
+                                    required
+                                    min="1"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Status Kehadiran</label>
+                                <select
+                                    name="status_kehadiran"
+                                    value={editingRsvp.status_kehadiran}
+                                    onChange={handleEditChange}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                >
+                                    <option value="hadir">Hadir</option>
+                                    <option value="tidak_hadir">Tidak Hadir</option>
+                                </select>
+                            </div>
+                            
+                            <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                >
+                                    {submitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

@@ -42,6 +42,8 @@ export const apiAuth = {
 export const apiAdmin = {
     getOrders: () => api.get('/admin/orders'),
     updateOrderStatus: (type, id, status) => api.patch(`/admin/orders/${type}/${id}`, { status }),
+    updateOrder: (type, id, data) => api.put(`/admin/orders/${type}/${id}`, data),
+    deleteOrder: (type, id) => api.delete(`/admin/orders/${type}/${id}`),
 
     // Individual order type endpoints
     getWeddingOrders: () => api.get('/admin/orders/wedding'),
@@ -59,6 +61,8 @@ export const apiAdmin = {
 
     // Attendance
     getAttendance: () => api.get('/admin/attendance'),
+    updateAttendance: (id, data) => api.put(`/admin/attendance/${id}`, data),
+    deleteAttendance: (id) => api.delete(`/admin/attendance/${id}`),
 
     // Invitations (Tokens)
     getInvitations: () => api.get('/admin/invitations'),

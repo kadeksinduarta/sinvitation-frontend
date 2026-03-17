@@ -41,13 +41,20 @@ const Footer = () => {
                     <div>
                         <h4 className="text-elegant-dark font-bold text-sm mb-6">Menu</h4>
                         <ul className="space-y-3">
-                            {['Home', 'Features', 'Pricing', 'Catalogue'].map((item) => (
-                                <li key={item}>
+                            {[
+                                { label: 'Home', href: '/' },
+                                { label: 'Tentang Kami', href: '/about' },
+                                { label: 'Katalog Undangan', href: '/product/undangan' },
+                                { label: 'Filter Instagram', href: '/product/filter' },
+                                { label: 'Form Pemesanan', href: '/forms' },
+                                { label: 'Kirim Undangan', href: '/kirim-undangan' },
+                            ].map((item) => (
+                                <li key={item.label}>
                                     <Link
-                                        href={item === 'Home' ? '/' : `/#${item.toLowerCase().replace(' ', '-')}`}
+                                        href={item.href}
                                         className="text-gray-500 text-sm font-medium hover:text-primary transition-colors"
                                     >
-                                        {item}
+                                        {item.label}
                                     </Link>
                                 </li>
                             ))}
@@ -58,18 +65,27 @@ const Footer = () => {
                         <h4 className="text-elegant-dark font-bold text-sm mb-6">Kontak</h4>
                         <ul className="space-y-3">
                             <li className="text-gray-500 text-sm font-medium">Gianyar, Bali, Indonesia</li>
-                            <li className="text-gray-500 text-sm font-medium">+62 831 1599 8178</li>
+                            <li>
+                                <a href="https://api.whatsapp.com/send?phone=+6283115998178" target="_blank" className="text-gray-500 text-sm font-medium hover:text-primary transition-colors">
+                                    +62 831 1599 8178
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/sinvitation.my.id" target="_blank" className="text-gray-500 text-sm font-medium hover:text-primary transition-colors">
+                                    @sinvitation.my.id
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-gray-400 text-xs font-medium">
-                        &copy; 2024 Sinvitation. All Rights Reserved.
+                        &copy; {new Date().getFullYear()} SInvitation. All Rights Reserved.
                     </p>
                     <div className="flex gap-6">
-                        <Link href="#" className="text-gray-400 text-xs font-medium hover:text-primary">Privacy Policy</Link>
-                        <Link href="#" className="text-gray-400 text-xs font-medium hover:text-primary">Terms of Service</Link>
+                        <Link href="/privacy-policy" className="text-gray-400 text-xs font-medium hover:text-primary transition-colors">Kebijakan Privasi</Link>
+                        <Link href="/terms-of-service" className="text-gray-400 text-xs font-medium hover:text-primary transition-colors">Syarat & Ketentuan</Link>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sinvitation.my.id/sitemap.xml
+
+# Block admin pages from indexing
+Disallow: /admin/
+Disallow: /api/
+Disallow: /client/

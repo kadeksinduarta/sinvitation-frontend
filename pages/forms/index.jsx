@@ -57,8 +57,42 @@ export default function FormsIndex() {
     return (
         <>
             <Head>
-                <title>Form Pemesanan | Sinvitation</title>
-                <meta name="description" content="Isi form pemesanan undangan digital - Wedding, Birthday, dan Metatah" />
+                <title>Form Pemesanan Undangan Digital | SInvitation</title>
+                <meta name="description" content="Pesan undangan digital premium - Wedding, Birthday, dan Metatah. Isi form data, upload bukti transfer, dan tim kami segera memproses pesanan Anda." />
+                <meta name="keywords" content="pesan undangan digital, order undangan online, form pemesanan undangan, undangan pernikahan order, SInvitation order" />
+                <link rel="canonical" href="https://sinvitation.my.id/forms" />
+
+                <meta property="og:title" content="Form Pemesanan Undangan Digital | SInvitation" />
+                <meta property="og:description" content="Pesan undangan digital premium - Wedding, Birthday, dan Metatah." />
+                <meta property="og:url" content="https://sinvitation.my.id/forms" />
+                <meta property="og:image" content="https://sinvitation.my.id/images/Logo-latar.png" />
+
+                <meta name="twitter:title" content="Form Pemesanan Undangan Digital | SInvitation" />
+                <meta name="twitter:description" content="Pesan undangan digital premium - Wedding, Birthday, dan Metatah." />
+
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "BreadcrumbList",
+                            "itemListElement": [
+                                {
+                                    "@type": "ListItem",
+                                    "position": 1,
+                                    "name": "Home",
+                                    "item": "https://sinvitation.my.id"
+                                },
+                                {
+                                    "@type": "ListItem",
+                                    "position": 2,
+                                    "name": "Form Pemesanan",
+                                    "item": "https://sinvitation.my.id/forms"
+                                }
+                            ]
+                        })
+                    }}
+                />
             </Head>
             <Navbar />
 

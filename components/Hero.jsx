@@ -82,8 +82,8 @@ const Hero = () => {
                 className="fixed bottom-8 right-8 z-50 bg-[#25D366] p-4 rounded-full shadow-2xl border-4 border-white"
             >
                 <Image
-                    src="https://raw.githubusercontent.com/kadeksinduarta/gambar-bli-kadek/fc634830eb151afc8e4566e929420e44b2dd0024/wa.svg"
-                    alt="WA"
+                    src="/images/wa.svg"
+                    alt="WhatsApp"
                     width={28}
                     height={28}
                     className="brightness-0 invert"

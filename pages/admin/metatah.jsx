@@ -34,6 +34,7 @@ export default function AdminMetatah() {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState(initialMetatahForm);
     const [submitting, setSubmitting] = useState(false);
 
@@ -112,6 +113,38 @@ export default function AdminMetatah() {
         }));
     };
 
+    const handleEdit = (order) => {
+        let parsedOrtu = [{ nama: '' }];
+        let parsedPeserta = [];
+        
+        try { if(order.data_ortu && typeof order.data_ortu === 'string') parsedOrtu = JSON.parse(order.data_ortu); else if (Array.isArray(order.data_ortu)) parsedOrtu = order.data_ortu; } catch(e){}
+        try { if(order.data_peserta && typeof order.data_peserta === 'string') parsedPeserta = JSON.parse(order.data_peserta); else if (Array.isArray(order.data_peserta)) parsedPeserta = order.data_peserta; } catch(e){}
+
+        setFormData({
+            ...order,
+            isi_foto: order.isi_foto === 1 || order.isi_foto === true,
+            data_ortu: parsedOrtu.length > 0 ? parsedOrtu : [{ nama: '' }],
+            data_peserta: parsedPeserta,
+            jumlah_peserta: parsedPeserta.length || order.jumlah_peserta || 0,
+        });
+        setEditingId(order.id);
+        setIsAdding(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) return;
+        
+        try {
+            await apiAdmin.deleteOrder('metatah', id);
+            toast.success('Pesanan berhasil dihapus');
+            fetchOrders();
+        } catch (error) {
+            console.error('Failed to delete order:', error);
+            toast.error('Gagal menghapus pesanan');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -122,10 +155,18 @@ export default function AdminMetatah() {
                 data_peserta: JSON.stringify(formData.data_peserta),
                 data_ortu: JSON.stringify(formData.data_ortu),
             };
-            await apiAdmin.createMetatahOrder(submitData);
-            toast.success('Data metatah berhasil disimpan!');
+            
+            if (editingId) {
+                await apiAdmin.updateOrder('metatah', editingId, submitData);
+                toast.success('Data metatah berhasil diperbarui!');
+            } else {
+                await apiAdmin.createMetatahOrder(submitData);
+                toast.success('Data metatah berhasil disimpan!');
+            }
+            
             setFormData(initialMetatahForm);
             setIsAdding(false);
+            setEditingId(null);
             fetchOrders();
         } catch (error) {
             toast.error(error.response?.data?.message || 'Gagal menyimpan data');
@@ -172,7 +213,17 @@ export default function AdminMetatah() {
                         <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
                     </div>
                     <button
-                        onClick={() => setIsAdding(!isAdding)}
+                        onClick={() => {
+                            if (isAdding) {
+                                setIsAdding(false);
+                                setEditingId(null);
+                                setFormData(initialMetatahForm);
+                            } else {
+                                setIsAdding(true);
+                                setEditingId(null);
+                                setFormData(initialMetatahForm);
+                            }
+                        }}
                         className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
                     >
                         {isAdding ? <X className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
@@ -184,7 +235,9 @@ export default function AdminMetatah() {
             {/* Form Pengisian Data */}
             {isAdding && (
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-purple-100 mb-6">
-                    <h2 className="text-lg font-bold mb-4 text-gray-800">Form Pengisian Data Metatah</h2>
+                    <h2 className="text-lg font-bold mb-4 text-gray-800">
+                        {editingId ? 'Edit Data Metatah' : 'Form Pengisian Data Metatah'}
+                    </h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Info Umum */}
                         <div>
@@ -325,7 +378,15 @@ export default function AdminMetatah() {
                         </div>
 
                         <div className="flex justify-end gap-3 pt-4 border-t">
-                            <button type="button" onClick={() => setIsAdding(false)} className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium">
+                            <button 
+                                type="button" 
+                                onClick={() => {
+                                    setIsAdding(false);
+                                    setEditingId(null);
+                                    setFormData(initialMetatahForm);
+                                }} 
+                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                            >
                                 Batal
                             </button>
                             <button type="submit" disabled={submitting} className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-bold disabled:opacity-50">
@@ -376,13 +437,29 @@ export default function AdminMetatah() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            <button
-                                                onClick={() => handleView(order)}
-                                                className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                                                title="Lihat Detail"
-                                            >
-                                                <Eye className="w-5 h-5" />
-                                            </button>
+                                            <div className="flex justify-center flex-wrap gap-2">
+                                                <button
+                                                    onClick={() => handleView(order)}
+                                                    className="p-1.5 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                                    title="Lihat Detail"
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleEdit(order)}
+                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit Data"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(order.id)}
+                                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Hapus Data"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

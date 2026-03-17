@@ -9,7 +9,6 @@ export default function KirimUndangan() {
   const [linkUndangan, setLinkUndangan] = useState('');
   const [namaTamu, setNamaTamu] = useState('');
   const [tipeAcara, setTipeAcara] = useState('pernikahan');
-  const [penggantiSpasi, setPenggantiSpasi] = useState('%20');
   const [copied, setCopied] = useState(false);
 
   const formatLink = () => {
@@ -29,7 +28,7 @@ export default function KirimUndangan() {
       cleanLink += '/';
     }
 
-    const formattedName = namaTamu.trim().replace(/\s+/g, penggantiSpasi);
+    const formattedName = namaTamu.trim().replace(/\s+/g, '+');
     const separator = cleanLink.includes('?') ? '&' : '?';
     return `${cleanLink}${separator}untuk=${formattedName}`;
   };
@@ -74,7 +73,42 @@ export default function KirimUndangan() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Head>
-        <title>Kirim Undangan Digital | SInvitation</title>
+        <title>Kirim Undangan Digital Personal via WhatsApp | SInvitation</title>
+        <meta name="description" content="Kirim undangan digital personal ke WhatsApp tamu Anda dengan satu kali klik. Buat pesan undangan pernikahan, ulang tahun, dan metatah yang rapi dan personal." />
+        <meta name="keywords" content="kirim undangan digital, kirim undangan whatsapp, undangan personal, share undangan digital, SInvitation kirim" />
+        <link rel="canonical" href="https://sinvitation.my.id/kirim-undangan" />
+
+        <meta property="og:title" content="Kirim Undangan Digital Personal via WhatsApp | SInvitation" />
+        <meta property="og:description" content="Kirim undangan digital personal ke WhatsApp tamu Anda dengan satu kali klik." />
+        <meta property="og:url" content="https://sinvitation.my.id/kirim-undangan" />
+        <meta property="og:image" content="https://sinvitation.my.id/images/Logo-latar.png" />
+
+        <meta name="twitter:title" content="Kirim Undangan Digital Personal via WhatsApp | SInvitation" />
+        <meta name="twitter:description" content="Kirim undangan digital personal ke WhatsApp tamu Anda dengan satu kali klik." />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://sinvitation.my.id"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Kirim Undangan",
+                  "item": "https://sinvitation.my.id/kirim-undangan"
+                }
+              ]
+            })
+          }}
+        />
       </Head>
 
       <Navbar />
@@ -202,21 +236,7 @@ export default function KirimUndangan() {
             </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-soft-blue text-primary flex items-center justify-center text-xs">4</span>
-            Pengaturan Spasi Nama
-          </label>
-          <select
-            value={penggantiSpasi}
-            onChange={(e) => setPenggantiSpasi(e.target.value)}
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none text-gray-700"
-          >
-            <option value="%20">Garis Spasi (%20) - Default</option>
-            <option value="_">Garis Bawah (_)</option>
-            <option value="+">Tanda Tambah (+)</option>
-          </select>
-        </div>
+
 
     </div>
 
