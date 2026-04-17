@@ -117,7 +117,7 @@ export default function Document() {
                 {
                   "@type": "SiteNavigationElement",
                   "position": 5,
-                  "name": "Tentang Kami",
+                  "name": "About",
                   "description": "Profil SInvitation - Platform undangan digital premium berbasis di Bali, Indonesia",
                   "url": "https://sinvitation.my.id/about"
                 }

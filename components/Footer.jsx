@@ -43,7 +43,7 @@ const Footer = () => {
                         <ul className="space-y-3">
                             {[
                                 { label: 'Home', href: '/' },
-                                { label: 'Tentang Kami', href: '/about' },
+                                { label: 'About', href: '/about' },
                                 { label: 'Katalog Undangan', href: '/product/undangan' },
                                 { label: 'Filter Instagram', href: '/product/filter' },
                                 { label: 'Form Pemesanan', href: '/forms' },

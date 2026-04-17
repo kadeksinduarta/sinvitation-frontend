@@ -13,10 +13,10 @@ export default function KirimUndangan() {
 
   const formatLink = () => {
     if (!linkUndangan || !namaTamu) return '';
-    
+
     // Membersihkan spasi di awal dan akhir input
     let cleanLink = linkUndangan.trim();
-    
+
     // Hapus SEMUA garis miring (/) yang ada di akhir URL untuk membersihkan input yang berantakan msl: "///"
     while (cleanLink.endsWith('/')) {
       cleanLink = cleanLink.slice(0, -1);
@@ -40,7 +40,7 @@ export default function KirimUndangan() {
 
     switch (tipeAcara) {
       case 'pernikahan':
-        return `Halo ${nama},\nDengan penuh kebahagiaan kami mengundang Anda untuk hadir dan memberikan doa restu pada acara pernikahan kami. Silakan membuka undangan digital melalui link berikut:\n\n${link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk merayakan hari istimewa kami. Terima kasih atas doa dan restu yang diberikan.`;
+        return `Om Swastyastu ${nama},\nDengan penuh kebahagiaan kami mengundang Anda untuk hadir dan memberikan doa restu pada acara pernikahan kami. Silakan membuka undangan digital melalui link berikut:\n\n${link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk merayakan hari istimewa kami. Terima kasih atas doa dan restu yang diberikan.`;
       case 'metatah':
         return `Om Swastyastu,\nDengan hormat kami mengundang ${nama} untuk hadir pada acara Upacara Metatah (Potong Gigi) yang akan kami selenggarakan. Informasi lengkap mengenai acara dapat dilihat melalui undangan digital pada link berikut:\n\n${link}\n\nMerupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i dapat berkenan hadir serta memberikan doa restu dalam acara tersebut. Atas kehadiran dan doa restunya kami ucapkan terima kasih.`;
       case 'ulang_tahun':
@@ -217,100 +217,99 @@ export default function KirimUndangan() {
                       key={type}
                       className={`flex items-center p-3 border rounded-xl cursor-pointer transition-all ${tipeAcara === type ? 'border-primary bg-soft-blue' : 'border-gray-200 hover:border-accent'}`}
                     >
-                  <input
-                    type="radio"
-                    name="tipeAcara"
-                    value={type}
-                    checked={tipeAcara === type}
-                    onChange={() => setTipeAcara(type)}
-                    className="hidden"
-                  />
-                  <div className={`w-4 h-4 rounded-full border-2 mr-3 flex items-center justify-center ${tipeAcara === type ? 'border-primary' : 'border-gray-300'}`}>
-                  {tipeAcara === type && <div className="w-2 h-2 rounded-full bg-primary" />}
-                </div>
-                <span className="font-medium text-gray-800">
-                  {type === 'pernikahan' ? 'Pernikahan' : type === 'metatah' ? 'Metatah (Potong Gigi)' : 'Ulang Tahun'}
-                </span>
-              </label>
+                      <input
+                        type="radio"
+                        name="tipeAcara"
+                        value={type}
+                        checked={tipeAcara === type}
+                        onChange={() => setTipeAcara(type)}
+                        className="hidden"
+                      />
+                      <div className={`w-4 h-4 rounded-full border-2 mr-3 flex items-center justify-center ${tipeAcara === type ? 'border-primary' : 'border-gray-300'}`}>
+                        {tipeAcara === type && <div className="w-2 h-2 rounded-full bg-primary" />}
+                      </div>
+                      <span className="font-medium text-gray-800">
+                        {type === 'pernikahan' ? 'Pernikahan' : type === 'metatah' ? 'Metatah (Potong Gigi)' : 'Ulang Tahun'}
+                      </span>
+                    </label>
                   ))}
+                </div>
+              </div>
+
+
+
             </div>
-        </div>
 
+            {/* Right Side: Preview & Actions */}
+            <div className="lg:col-span-7 bg-soft-blue/30 p-6 sm:p-8 flex flex-col h-full">
+              <div className="flex-grow flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-elegant-dark flex items-center gap-2">
+                    <MessageCircle className="w-5 h-5 text-primary" />
+                    Preview Chat WhatsApp
+                  </h3>
+                </div>
 
+                <div className="bg-white rounded-2xl shadow-sm border border-border-subtle p-5 sm:p-6 flex-grow relative overflow-hidden">
+                  {/* Visual WhatsApp Bubble like */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl -mr-10 -mt-10" />
 
-    </div>
+                  <div className="relative z-10 font-sans text-[15px] leading-relaxed text-gray-800 whitespace-pre-wrap">
+                    {generateMessage()}
+                  </div>
+                </div>
 
-            {/* Right Side: Preview & Actions */ }
-  <div className="lg:col-span-7 bg-soft-blue/30 p-6 sm:p-8 flex flex-col h-full">
-    <div className="flex-grow flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-elegant-dark flex items-center gap-2">
-          <MessageCircle className="w-5 h-5 text-primary" />
-          Preview Chat WhatsApp
-        </h3>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-sm border border-border-subtle p-5 sm:p-6 flex-grow relative overflow-hidden">
-        {/* Visual WhatsApp Bubble like */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl -mr-10 -mt-10" />
-
-        <div className="relative z-10 font-sans text-[15px] leading-relaxed text-gray-800 whitespace-pre-wrap">
-          {generateMessage()}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-        <button
-          onClick={handleCopy}
-          className={`flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold transition-all ${
-          copied
-            ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
-            : 'bg-white border-2 border-primary text-primary hover:bg-soft-blue'
-        }`}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                  <button
+                    onClick={handleCopy}
+                    className={`flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold transition-all ${copied
+                      ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
+                      : 'bg-white border-2 border-primary text-primary hover:bg-soft-blue'
+                      }`}
                   >
-        <AnimatePresence mode="wait">
-          {copied ? (
-            <motion.div
-              key="check"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              className="flex items-center gap-2"
-            >
-              <CheckCircle2 className="w-5 h-5" />
-              <span>Tersalin!</span>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="copy"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              className="flex items-center gap-2"
-            >
-              <Copy className="w-5 h-5" />
-              <span>Salin Teks</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </button>
+                    <AnimatePresence mode="wait">
+                      {copied ? (
+                        <motion.div
+                          key="check"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          className="flex items-center gap-2"
+                        >
+                          <CheckCircle2 className="w-5 h-5" />
+                          <span>Tersalin!</span>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="copy"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          className="flex items-center gap-2"
+                        >
+                          <Copy className="w-5 h-5" />
+                          <span>Salin Teks</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
 
-      <button
-        onClick={handleWhatsApp}
-        className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-white bg-[#25D366] hover:bg-[#20bd5a] shadow-lg shadow-[#25D366]/30 transition-all hover:-translate-y-0.5"
-      >
-        <Send className="w-5 h-5" />
-        Buka WhatsApp
-      </button>
-    </div>
-  </div>
+                  <button
+                    onClick={handleWhatsApp}
+                    className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-white bg-[#25D366] hover:bg-[#20bd5a] shadow-lg shadow-[#25D366]/30 transition-all hover:-translate-y-0.5"
+                  >
+                    <Send className="w-5 h-5" />
+                    Buka WhatsApp
+                  </button>
+                </div>
+              </div>
             </div >
 
           </motion.div >
         </div >
       </main >
 
-    <Footer />
+      <Footer />
     </div >
   );
 }
