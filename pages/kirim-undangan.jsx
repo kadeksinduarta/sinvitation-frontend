@@ -40,7 +40,8 @@ export default function KirimUndangan() {
 
     switch (tipeAcara) {
       case 'pernikahan':
-        return `Om Swastyastu ${nama},\nDengan penuh kebahagiaan kami mengundang Anda untuk hadir dan memberikan doa restu pada acara pernikahan kami. Silakan membuka undangan digital melalui link berikut:\n\n${link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk merayakan hari istimewa kami. Terima kasih atas doa dan restu yang diberikan.`;
+        return `Om Swastyastu ${nama},\nDengan penuh kebahagiaan kami mengundang Anda untuk hadir dan memberikan doa restu pada acara pernikahan kami.
+Silakan membuka undangan digital melalui link berikut:\n\n${link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk merayakan hari istimewa kami. \n\n Terima kasih atas doa dan restu yang diberikan. \n Om Shanti Shanti Shanti Om`;
       case 'metatah':
         return `Om Swastyastu,\nDengan hormat kami mengundang ${nama} untuk hadir pada acara Upacara Metatah (Potong Gigi) yang akan kami selenggarakan. Informasi lengkap mengenai acara dapat dilihat melalui undangan digital pada link berikut:\n\n${link}\n\nMerupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i dapat berkenan hadir serta memberikan doa restu dalam acara tersebut. Atas kehadiran dan doa restunya kami ucapkan terima kasih.`;
       case 'ulang_tahun':
